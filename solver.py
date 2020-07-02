@@ -1,8 +1,10 @@
+#Solves the sudoku board using the Backtracking Algorithm
+
 from __future__ import print_function
 import numpy as np
-import sud
+from sud import predictions
 import cv2
-from PIL import Image, ImageDraw, ImageFont
+from basic import *
 
 
 class SudokuSolver:
@@ -56,31 +58,59 @@ class SudokuSolver:
 			
 		return False
 			
-def displayGrid(board, predictions, inclusive):
-	height = 540
-	width = 540
-	image = np.ones((height, width))
-	cell_height = image.shape[0] // 9
+    
+def displaySolution(image, final, predictions):
+	image = image.copy()
 	cell_width = image.shape[1] // 9
-	for i in range(10):
-	    p1 = (i*cell_width, 0)
-	    p2 = (i*cell_width, height)
-	    if i % 3 == 0:
-	    	cv2.line(image, p1, p2, (0, 0, 0), 6)
-	    else: cv2.line(image, p1, p2, (0, 0, 0), 1)
-	for i in range(10):
-		p1 = (0, i*cell_height)
-		p2 = (width, i*cell_height)
-		if i % 3 == 0:
-	    		cv2.line(image, p1, p2, (0, 0, 0), 6)
-	    	else: cv2.line(image, p1, p2, (0, 0, 0), 1)	    	
+	cell_height = image.shape[0] // 9
+	counter = 0
+	for i in range(9):
+		for j in range(9):
+			if predictions[counter] != 0:
+				#counter += 1
+				color = (0, 0, 0)
+			else:
+				color = (255, 0, 0)
+			if final[i][j] == 0:
+				print("Couldn't properly solve!")
+				return None
+			
+			text = str(final[i][j])
+			offsetX = cell_width // 15
+			offsetY = cell_height // 15
+			font = cv2.FONT_HERSHEY_SIMPLEX
+			(text_height, text_width), baseline = cv2.getTextSize(text, font, fontScale = 1, thickness = 3)
+			marginX = cell_width // 7
+			marginY = cell_height // 7
+			bottomLeft = cell_width*j + (cell_width - text_width) // 2 + offsetX
+			bottomRight = cell_height*(i+1) - (cell_height - text_height) // 2 + offsetY
+			image = cv2.putText(image, text, (int(bottomLeft), int(bottomRight)), font, 1, color, thickness = 3, lineType = cv2.LINE_AA)
+			counter += 1
 	return image
+			
+def unwarp(image, coords):
+	ratio = 1.2
+	tl, tr, br, bl = coords
+	widthA = np.sqrt((tl[1] - tr[1])**2 + (tl[0] - tr[1])**2)
+	widthB = np.sqrt((bl[1] - br[1])**2 + (bl[0] - br[1])**2)
+	heightA = np.sqrt((tl[1] - bl[1])**2 + (tl[0] - bl[1])**2)
+	heightB = np.sqrt((tr[1] - br[1])**2 + (tr[0] - br[1])**2)
+	width = max(widthA, widthB) * ratio
+	height = width
+
+	destination = np.array([
+	[0, 0],
+	[height, 0],
+	[height, width],
+	[0, width]], dtype = np.float32)
+	M = cv2.getPerspectiveTransform(coords, destination)
+	unwarped = cv2.warpPerspective(image, M, (int(height), int(width)), flags = cv2.WARP_INVERSE_MAP)
+	return unwarped
 	
-	
+
 					
 if __name__ == "__main__":
-	predictions = sud.predictions
-	inclusive = sud.inclusive
+	#predictions = predictions
 	board = np.array(predictions).reshape((9, 9))
 	print(board)
 	print("Solving...")
@@ -88,12 +118,22 @@ if __name__ == "__main__":
 	solver.solve()
 	final = solver.board
 	print(final)
-	print("Press 'q' to quit")
-	while True:
-		cv2.imshow("Actual Image", sud.basic.image)
-		cv2.imshow("Warped Image", sud.basic.warpedImage)
-		cv2.imshow("Coords Image", sud.basic.coordsImage)
+	displayImage = cv2.imread('./boards/blank.png')
+	solutionImage = displaySolution(displayImage, final, predictions)
+	if solutionImage is None:
+		print("Error occured! Try another image")
+	else:
+	#finalImage = unwarp(solutionImage, coords)
+		#unwarpedImage = unwarp(solutionImage, coords)
+		#result = np.where(unwarpedImage.sum(axis=-1, keepdims=True)!=0, unwarpedImage, image)
+		print("Press 'q' to quit...")
+		while True:
+			cv2.imshow("Actual Image", image)
+			cv2.imshow("Warped Image", warpedImage)
+			cv2.imshow("Coords Image", coordsImage)
+			cv2.imshow("Solution", solutionImage)
+			#cv2.imshow("Solution on Unwarped Image", unwarpedImage)
 		
-		if cv2.waitKey(1) & 0xFF == ord('q'):
-			cv2.destroyAllWindows()
-			break
+			if cv2.waitKey(1) & 0xFF == ord('q'):
+				cv2.destroyAllWindows()
+				break
