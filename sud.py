@@ -1,3 +1,4 @@
+#Predicts the digits in grid
 import numpy as np 
 import torch
 import torchvision
@@ -7,7 +8,7 @@ import torch.nn.functional as F
 import torch.optim as optim
 import torchvision.transforms as transforms
 import christopher as chris
-import basic
+from basic import tiles
 
 class Network(nn.Module):
     def __init__(self):
@@ -49,7 +50,7 @@ model.eval()
 
 def preprocessImage(image, skip_dilation = False):
     preprocess = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    preprocess = cv2.adaptiveThreshold(preprocess, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 255, 2)
+    preprocess = cv2.adaptiveThreshold(preprocess, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 101, 2)
 
     if not skip_dilation:
         kernel = np.array([[0, 1, 0], [1, 2, 1], [0, 1, 0]], dtype = np.uint8)
@@ -98,9 +99,8 @@ def centeringImage(image):
 
 images = []
 predictions = []
-inclusive = []
 
-for tile in basic.tiles:
+for i, tile in enumerate(tiles):
 	preprocess = preprocessImage(tile)
 	flag, centered = centeringImage(preprocess)
 	centeredImage = cv2.resize(centered, (32, 32))
@@ -110,11 +110,6 @@ for tile in basic.tiles:
 	preds = model(centeredImage)
 	_, prediction = torch.max(preds, dim = 1)
 	if flag:
-		inclusive.append(prediction.item() + 1)
 		predictions.append(prediction.item() + 1)
 	else:
 		predictions.append(0)
-
-#print(predictions)
-
-
