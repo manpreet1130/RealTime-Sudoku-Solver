@@ -1,4 +1,3 @@
-#Predicts the digits in grid
 import numpy as np 
 import torch
 import torchvision
@@ -113,3 +112,4 @@ for i, tile in enumerate(tiles):
 		predictions.append(prediction.item() + 1)
 	else:
 		predictions.append(0)
+
