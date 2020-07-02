@@ -1,5 +1,5 @@
-# Sudoku-Solver-OpenCV-CNN
-Solving the sudoku puzzle using **image processing**, **artificial intelligence** and the **backtracking algorithm**!
+# Sudoku Solver
+Solving the sudoku puzzle using **Image Processing**, **Artificial Intelligence** and the **Backtracking Algorithm**!
 
 ## Table of Contents
 1. [Usage](#usage)
