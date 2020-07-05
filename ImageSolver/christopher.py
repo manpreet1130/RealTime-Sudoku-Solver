@@ -10,31 +10,31 @@ import torch.optim as optim
 import random
 
 class Network(nn.Module):
-    def __init__(self):
-        super(Network, self).__init__()
-        self.layer1 = nn.Sequential(
-            nn.Conv2d(1, 32, kernel_size = 3, padding = 1),
-            nn.ReLU(),
-            nn.MaxPool2d(kernel_size = 2, stride = 2))
-        self.layer2 = nn.Sequential(
-            nn.Conv2d(32, 64, kernel_size = 3, padding = 1),
-            nn.ReLU(),
-            nn.MaxPool2d(kernel_size = 2, stride = 2))
-        self.dropout = nn.Dropout(p = 0.40)
-        self.fc1 = nn.Sequential(
-            nn.Linear(8*8*64, 128),
-            nn.ReLU())
-        self.fc2 = nn.Linear(128, 10)
+	def __init__(self):
+		super(Network, self).__init__()
+		self.layer1 = nn.Sequential(
+			nn.Conv2d(1, 32, kernel_size = 3, padding = 1),
+			nn.ReLU(),
+			nn.MaxPool2d(kernel_size = 2, stride = 2))
+		self.layer2 = nn.Sequential(
+			nn.Conv2d(32, 64, kernel_size = 3, padding = 1),
+			nn.ReLU(),
+			nn.MaxPool2d(kernel_size = 2, stride = 2))
+		self.dropout = nn.Dropout(p = 0.40)
+		self.fc1 = nn.Sequential(
+			nn.Linear(8*8*64, 128),
+			nn.ReLU())
+		self.fc2 = nn.Linear(128, 10)
 
-    def forward(self, input):
-        out = self.layer1(input)
-        out = self.layer2(out)
-        out = self.dropout(out)
-        out = out.reshape(out.shape[0], -1)
-        out = self.fc1(out)
-        out = self.dropout(out)
-        out = F.softmax(self.fc2(out), dim = 1)
-        return out
+	def forward(self, input):
+		out = self.layer1(input)
+		out = self.layer2(out)
+		out = self.dropout(out)
+		out = out.reshape(out.shape[0], -1)
+		out = self.fc1(out)
+		out = self.dropout(out)
+		out = F.softmax(self.fc2(out), dim = 1)
+		return out
 
 device = ("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -50,35 +50,25 @@ transformations = transforms.Compose([
 
 train_ds = ImageFolder(root = './data/train', transform = transformations)
 test_ds = ImageFolder(root = './data/test', transform = transformations)
-#print(train_ds.classes)
 
-#train_ds.targets = torch.tensor(train_ds.targets)
-#train_ds.targets[:] += 1
-#test_ds.targets = torch.tensor(test_ds.targets)
-#test_ds.targets[:] += 1
-#print(train_ds.targets)
-#print(test_ds.targets)
 batch_size = 32
 train_loader = DataLoader(train_ds, batch_size, shuffle = True, drop_last = True)
 test_loader = DataLoader(test_ds, batch_size, shuffle = False, drop_last = True)
 
 model.to(device)
 
+
 def test():
 	model.load_state_dict(torch.load('./christopher.pt'))
 	model.eval()
 	for i, (images, labels) in enumerate(test_loader):
 		images, labels = images.to(device), labels.to(device)
-		print(labels)
-		#print(labels)
 		preds = model(images)
 		_, prediction = torch.max(preds, dim = 1)
 		count = sum(prediction == labels).item()
 		print(count)
-		#if random.random() < 0.80:
-		#	print("PREDICTIONS : ", prediction)
-		#	print("LABELS : ", labels)
-		#break
+		
+		
 def train():
 	n_epochs = 12
 	acc_list = []
