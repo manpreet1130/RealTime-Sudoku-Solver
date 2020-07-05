@@ -5,8 +5,7 @@ Solving the sudoku puzzle using **Image Processing**, **Artificial Intelligence*
 1. [Usage](#usage)
 2. [Procedure](#procedure)
 3. [Scripts](#scripts)
-4. [Limitations](#limitations)
-5. [Future Development](#future-development)
+4. [Future Development](#future-development)
 
 ## Usage
 Clone the repository `git clone https://github.com/manpreet1130/RealTime-Sudoku-Solver`  
@@ -46,9 +45,6 @@ This script is used to take the individual tiles, does a bit of preprocessing an
 
 ### solver.py
 This script consists of the backtracking algorithm used to solve the sudoku puzzle. After the predictions are made, they are fed into this script. The final board is than printed onto a blank sudoku grid image.
-
-## Limitations
-The model isn't perfect. It isn't able to detect all the digits in every single image provided.
 
 ## Future Development
 1. Applying augmented reality!
