@@ -1,9 +1,7 @@
 #Solving the sudoku using the backtracking algorithm and showing the solution!
 from __future__ import print_function
 import numpy as np
-from sud import predictions
 import cv2
-from basic import *
 
 
 class SudokuSolver:
@@ -85,27 +83,6 @@ def displaySolution(image, final, predictions):
 			image = cv2.putText(image, text, (int(bottomLeft), int(bottomRight)), font, 1, color, thickness = 3, lineType = cv2.LINE_AA)
 			counter += 1
 	return image
-			
-'''
-def unwarp(image, coords):
-    ratio = 1.2
-    tl, tr, br, bl = coords
-    widthA = np.sqrt((tl[1] - tr[1])**2 + (tl[0] - tr[1])**2)
-    widthB = np.sqrt((bl[1] - br[1])**2 + (bl[0] - br[1])**2)
-    heightA = np.sqrt((tl[1] - bl[1])**2 + (tl[0] - bl[1])**2)
-    heightB = np.sqrt((tr[1] - br[1])**2 + (tr[0] - br[1])**2)
-    width = max(widthA, widthB) * ratio
-    height = width
-    
-    destination = np.array([
-        [0, 0],
-        [height, 0],
-        [height, width],
-        [0, width]], dtype = np.float32)
-    M = cv2.getPerspectiveTransform(coords, destination)
-    unwarped = cv2.warpPerspective(image, M, (int(height), int(width)), flags = cv2.WARP_INVERSE_MAP)
-    return unwarped
-'''	
 
 					
 if __name__ == "__main__":
