@@ -12,7 +12,7 @@ Clone the repository `git clone https://github.com/manpreet1130/RealTime-Sudoku-
 Realtime solver: `cd RealTimeSolver` and run `python main.py`  
 Image solver: `cd ImageSolver` and run `python main.py`
 
-<p align = "center"><img align = "center" src = "images/realtimeBook.png" /></p>
+<p align = "center"><img align = "center" src = "images/realtime.png" /></p>
 
 ## Procedure
 ### 1) Image Processing
