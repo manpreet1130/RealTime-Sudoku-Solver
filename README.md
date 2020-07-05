@@ -9,8 +9,9 @@ Solving the sudoku puzzle using **Image Processing**, **Artificial Intelligence*
 5. [Future Development](#future-development)
 
 ## Usage
-Download the repository and run the following command :`python solver.py`  
-This will start up the code and ask for a filepath as input. (`./boards/sudoku6.jpg`)
+Clone the repository `git clone https://github.com/manpreet1130/RealTime-Sudoku-Solver`  
+Realtime solver: `cd RealTimeSolver` and run `python main.py`  
+Image solver: `cd ImageSolver` and run `python main.py`
 
 
 ## Procedure
@@ -31,11 +32,14 @@ The predictions are fed into a script which solves the sudoku using the Backtrac
 <p align = "center"><img align = "center" src = "images/solution.png" /></p>
 
 ## Scripts
+### main.py
+This script combines all the scripts given below.
+
 ### christopher.py
 This script consists of a Convolutional Neural Network trained on a custom dataset. 
 
 ### basic.py
-This script is used to take as input the original image, apply preprocessing, get the corner points of the board, warp the image and seperate out the individual smaller grids(tiles) containing the individual digits/blanks
+This script is used to take as input the original image, apply preprocessing, get the corner points of the board, warp the image and seperate out the individual smaller grids(tiles) containing the individual digits/blanks.
 
 ### sud.py
 This script is used to take the individual tiles, does a bit of preprocessing and predict the digits in each tile. As the grid is a 9x9, the number of tiles are 81.
@@ -47,5 +51,4 @@ This script consists of the backtracking algorithm used to solve the sudoku puzz
 The model isn't perfect. It isn't able to detect all the digits in every single image provided.
 
 ## Future Development
-1. Adding in the ability to solve the puzzle in real-time via webcam
-2. Applying augmented reality!
+1. Applying augmented reality!
